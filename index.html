@@ -2,7 +2,8 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<title>專業抽獎程式</title>
+<title>專業抽獎程式v2.1</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <style>
 body {
   font-family: "Comic Sans MS","華康手札體","微軟正黑體",sans-serif;
@@ -21,7 +22,12 @@ body {
   display: flex;
   flex-direction: column;
 }
-.left h2 { margin-top: 0; color: #403f3f; border-bottom: 2px solid #ff7f50; padding-bottom: 5px; }
+.left-header{ display:flex; align-items:center; gap:12px; justify-content:space-between; }
+.left h2 { margin:0; color: #333; border-bottom: 2px solid #ff7f50; padding-bottom: 8px; font-size:20px; }
+.header-actions{ display:flex; gap:8px; align-items:center; margin-left:12px; }
+.header-actions button{ padding:6px 10px; font-size:13px; border-radius:6px; cursor:pointer; border:none; }
+.header-actions .btn-primary{ background:#ff7f50; color:#fff; }
+.header-actions .btn-secondary{ background:#666; color:#fff; }
 .left textarea { width: 95%; height: 220px; padding: 12px; font-size: 16px; border-radius: 12px; border: 1px solid #ccc; resize: none; margin-bottom: 15px; box-shadow: inset 0 0 8px rgba(0,0,0,0.05);}
 .left input[type="text"], .left input[type="number"] { width: 48%; padding: 8px; margin: 5px 1%; font-size: 14px; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box;}
 .left button { padding: 10px 15px; margin: 5px 0; border: none; cursor: pointer; border-radius: 8px; font-size: 14px; font-weight: bold; transition: all 0.2s;}
@@ -29,6 +35,9 @@ body {
 .left button.btn-start:hover { background: linear-gradient(45deg, #ff6f00, #ff9a3c); }
 .left button.btn-gray { background: #9e9e9e; color: white; }
 .left button.btn-gray:hover { background: #757575; }
+
+/* user status small */
+#userGreeting{ font-size:13px; color:#444; margin-left:12px; }
 
 /* 右側顯示區 */
 .right {
@@ -74,23 +83,37 @@ body {
 }
 #history div { margin-bottom: 5px; }
 #exportBtn { margin-top: 10px; background:#ff7f50; color:white; font-weight:bold; border-radius:8px; padding:8px 12px; border:none; cursor:pointer; }
-@keyframes flashRed { 0%{ color: red; } 50%{ color: black; } 100%{ color: red; } }
 
-/* settings modal */
+/* modal */
 .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; align-items:center; justify-content:center; z-index:2000; }
 .modal{ width:720px; max-width:92vw; background:#fff; border-radius:10px; padding:18px; box-shadow:0 10px 40px rgba(0,0,0,0.2); }
 .modal h2{ margin:0 0 10px 0; font-size:18px; }
-.modal textarea{ width:100%; height:180px; padding:8px; box-sizing:border-box; border-radius:6px; border:1px solid #ddd; resize:vertical; }
+.modal textarea, .modal input{ width:100%; padding:8px; box-sizing:border-box; border-radius:6px; border:1px solid #ddd; resize:vertical; margin-top:8px; }
 .modal .row{ display:flex; gap:8px; justify-content:flex-end; margin-top:10px; }
 .modal .row button{ padding:8px 12px; border-radius:8px; border:none; cursor:pointer; }
 .modal .row .save{ background:#28a745; color:#fff; }
 .modal .row .close{ background:#6c757d; color:#fff; }
+.modal .small{ font-size:13px; color:#666; margin-top:6px; }
+
+/* small note */
+.small-note{ font-size:12px; color:#666; margin-top:8px; }
 </style>
 </head>
 <body>
 
 <div class="left">
-  <h2>參加者名單</h2>
+  <div class="left-header">
+    <div style="display:flex; align-items:center;">
+      <h2>參加者名單</h2>
+      <div id="userGreeting">尚未登入</div>
+    </div>
+    <div class="header-actions">
+      <button id="loginBtnInline" class="btn-secondary" onclick="openLoginModal()">登入</button>
+      <button id="registerBtnInline" class="btn-secondary" onclick="openRegisterModal()">註冊</button>
+      <button id="logoutBtnInline" class="btn-secondary" style="display:none;" onclick="logout()">登出</button>
+    </div>
+  </div>
+
   <textarea id="names" placeholder="每行輸入一位參加者"></textarea>
   <input type="text" id="prizeInput" placeholder="本次抽獎獎品，例如：iPad"><br>
   
@@ -109,8 +132,10 @@ body {
     <button class="btn-gray" onclick="loadSample()">載入範例</button>
     <button class="btn-gray" onclick="clearList()">清空名單</button>
     <button class="btn-gray" onclick="clearHistory()">清除歷史紀錄</button>
-    <button class="btn-gray" onclick="enterPassword()">其他</button>
+    <button class="btn-gray" onclick="handleOther()">其他</button>
   </div>
+
+  <div class="small-note">※ 付費版可使用「其他」功能。</div>
 </div>
 
 <div class="right">
@@ -123,10 +148,10 @@ body {
 
 <input type="file" id="csvFile" accept=".csv,text/csv" style="display:none;">
 
-<!-- Settings modal (hidden by default) -->
+<!-- Settings modal (only accessible to premium users) -->
 <div id="settingsModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
   <div class="modal" role="document">
-    <h2 id="settingsTitle">設定：管理指定名單（密碼保護）</h2>
+    <h2 id="settingsTitle">設定：管理指定名單（付費功能）</h2>
     <p class="small">在下方每行輸入一個要優先抽中的名字。儲存後會存到本機瀏覽器（localStorage）。</p>
     <textarea id="specifiedList" placeholder="每行一個名字（儲存後會保留）"></textarea>
     <div class="row">
@@ -136,10 +161,199 @@ body {
   </div>
 </div>
 
-<script>
-let spinning = false;
+<!-- Login modal -->
+<div id="loginModal" class="modal-backdrop" role="dialog" aria-modal="true">
+  <div class="modal">
+    <h2>登入</h2>
+    <div class="small">請輸入帳號與密碼（已註冊帳號可登入）。</div>
+    <input id="loginUser" placeholder="帳號（username）" />
+    <input id="loginPass" type="password" placeholder="密碼" />
+    <div class="row">
+      <button class="close" onclick="closeLoginModal()">取消</button>
+      <button class="save" onclick="login()">登入</button>
+    </div>
+    <div class="small-note">若尚未註冊，請按「註冊」。</div>
+  </div>
+</div>
 
-// 更新顯示
+<!-- Register modal -->
+<div id="registerModal" class="modal-backdrop" role="dialog" aria-modal="true">
+  <div class="modal">
+    <h2>註冊帳號</h2>
+    <div class="small">註冊後可登入，並可升級為付費帳號（示範：模擬付款）。</div>
+    <input id="registerUser" placeholder="帳號（username）" />
+    <input id="registerPass" type="password" placeholder="密碼" />
+    <div style="display:flex; gap:8px; margin-top:8px;">
+      <button class="close" onclick="closeRegisterModal()">取消</button>
+      <button class="save" onclick="register()">註冊</button>
+    </div>
+    <div style="margin-top:8px;">
+      <button class="btn-gray" onclick="demoUpgrade()">付費升級（示範 +30天）</button>
+    </div>
+  </div>
+</div>
+
+<!-- Upgrade prompt modal -->
+<div id="upgradeModal" class="modal-backdrop" role="dialog" aria-modal="true">
+  <div class="modal">
+    <h2>升級為付費版</h2>
+    <p class="small">升級後可使用「其他」管理指定名單等高級功能。此處為示範：按下「立即升級」會把你的帳號訂閱延長 30 天（模擬付款）。</p>
+    <div style="display:flex; gap:8px; margin-top:8px;">
+      <button class="close" onclick="closeUpgradeModal()">取消</button>
+      <button class="save" onclick="performUpgrade()">立即升級（示範）</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================== Auth / Premium 系統 (client-only demo) ================== */
+
+/*
+ localStorage keys:
+  - users : JSON array [ {username, passwordHash, premiumUntil (ms) } ]
+  - currentUser : username string
+  - specifiedList : JSON array of names (for settings)
+*/
+
+// helpers: sha256 hash for password (returns hex)
+async function sha256Hex(str){
+  if(window.crypto && crypto.subtle){
+    const enc = new TextEncoder();
+    const data = enc.encode(str);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2,'0')).join('');
+  } else {
+    return 'plain:' + str;
+  }
+}
+
+function loadUsers(){ try{ return JSON.parse(localStorage.getItem('users')||'[]'); }catch(e){ return []; } }
+function saveUsers(arr){ localStorage.setItem('users', JSON.stringify(arr)); }
+function getCurrentUser(){ return localStorage.getItem('currentUser') || null; }
+function setCurrentUser(u){ if(u) localStorage.setItem('currentUser', u); else localStorage.removeItem('currentUser'); }
+
+// render status on UI (hides login/register when logged in)
+function renderUserStatus(){
+  const cur = getCurrentUser();
+  const greeting = document.getElementById('userGreeting');
+  const logoutInline = document.getElementById('logoutBtnInline');
+  const loginBtn = document.getElementById('loginBtnInline');
+  const registerBtn = document.getElementById('registerBtnInline');
+
+  if(!greeting) return;
+
+  if(!cur){
+    greeting.textContent = '尚未登入';
+    if(logoutInline) logoutInline.style.display = 'none';
+    if(loginBtn) loginBtn.style.display = 'inline-block';
+    if(registerBtn) registerBtn.style.display = 'inline-block';
+  } else {
+    const users = loadUsers();
+    const me = users.find(x=>x.username===cur);
+    if(me){
+      let premiumText = '';
+      if(me.premiumUntil && Date.now() < me.premiumUntil) {
+        const d = new Date(me.premiumUntil);
+        premiumText = `（付費至 ${d.toLocaleDateString()}）`;
+      } else {
+        premiumText = '（非付費）';
+      }
+      greeting.textContent = `Hi ${cur} ${premiumText}`;
+      if(logoutInline) logoutInline.style.display = 'inline-block';
+      if(loginBtn) loginBtn.style.display = 'none';
+      if(registerBtn) registerBtn.style.display = 'none';
+    } else {
+      greeting.textContent = '尚未登入';
+      if(logoutInline) logoutInline.style.display = 'none';
+      if(loginBtn) loginBtn.style.display = 'inline-block';
+      if(registerBtn) registerBtn.style.display = 'inline-block';
+    }
+  }
+}
+
+// register
+async function register(){
+  const u = document.getElementById('registerUser').value.trim();
+  const p = document.getElementById('registerPass').value;
+  if(!u || !p){ alert('請輸入帳號與密碼'); return; }
+  const users = loadUsers();
+  if(users.find(x=>x.username===u)){ alert('此帳號已存在，請改用其他帳號或直接登入'); return; }
+  const hash = await sha256Hex(p);
+  users.push({ username: u, passwordHash: hash, premiumUntil: 0 });
+  saveUsers(users);
+  setCurrentUser(u);
+  closeRegisterModal();
+  renderUserStatus();
+  alert('註冊完成並已登入（示範環境，請記得密碼不會送到後端）');
+}
+
+// login
+async function login(){
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  if(!u || !p){ alert('請輸入帳號與密碼'); return; }
+  const users = loadUsers();
+  const user = users.find(x=>x.username===u);
+  if(!user){ alert('找不到此帳號，請先註冊'); return; }
+  const hash = await sha256Hex(p);
+  if(hash !== user.passwordHash){ alert('密碼錯誤'); return; }
+  setCurrentUser(u);
+  closeLoginModal();
+  renderUserStatus();
+  alert('登入成功');
+}
+
+// logout
+function logout(){ setCurrentUser(null); renderUserStatus(); alert('已登出'); }
+
+/* upgrade / payment (demo) */
+function openUpgradeModal(){ document.getElementById('upgradeModal').style.display='flex'; }
+function closeUpgradeModal(){ document.getElementById('upgradeModal').style.display='none'; }
+function performUpgrade(){
+  const cur = getCurrentUser();
+  if(!cur){ alert('請先登入'); openLoginModal(); return; }
+  const users = loadUsers();
+  const me = users.find(x=>x.username===cur);
+  if(!me){ alert('找不到使用者資料'); return; }
+  const now = Date.now();
+  const addDays = 30;
+  const ms = addDays * 24 * 60 * 60 * 1000;
+  me.premiumUntil = Math.max(me.premiumUntil || 0, now) + ms;
+  saveUsers(users);
+  renderUserStatus();
+  closeUpgradeModal();
+  alert(`已升級為付費，用期限 +${addDays} 天`);
+}
+async function demoUpgrade(){
+  const u = document.getElementById('registerUser').value.trim();
+  const p = document.getElementById('registerPass').value;
+  if(!u || !p){ alert('請先填好註冊帳號與密碼再點升級'); return; }
+  const users = loadUsers();
+  if(!users.find(x=>x.username===u)){
+    const hash = await sha256Hex(p);
+    users.push({ username: u, passwordHash: hash, premiumUntil: 0 });
+    saveUsers(users);
+    setCurrentUser(u);
+  } else {
+    setCurrentUser(u);
+  }
+  openUpgradeModal();
+}
+function currentUserIsPremium(){
+  const cur = getCurrentUser();
+  if(!cur) return false;
+  const users = loadUsers();
+  const me = users.find(x=>x.username===cur);
+  if(!me) return false;
+  return (me.premiumUntil && Date.now() < me.premiumUntil);
+}
+
+/* ================== Lottery logic (kept) ================== */
+
+let spinning = false;
+let winnerLog = []; // store structured winner records for export
+
 function updateDisplay(name, color){
   const display = document.getElementById("currentName");
   if(!name){
@@ -153,19 +367,30 @@ function updateDisplay(name, color){
   else{ display.style.color="#000"; display.style.animation=""; }
 }
 
-// 新增歷史
-function addHistory(winner){
-  const historyDiv = document.getElementById("history");
+function addHistoryRecord(name){
   const prize = document.getElementById("prizeInput").value.trim() || "";
   const now = new Date();
-  const timeString = now.toLocaleTimeString();
-  const entry = document.createElement("div");
-  entry.textContent = prize ? `🎉 ${winner} 中獎！獎品：${prize} (${timeString})` : `🎉 ${winner} 中獎！ (${timeString})`;
-  historyDiv.prepend(entry);
+  const record = { name, prize, time: now.toISOString() };
+  winnerLog.unshift(record); // newest first
+  renderHistory();
 }
 
-// 清空歷史
-function clearHistory(){ document.getElementById("history").innerHTML=""; }
+function renderHistory(){
+  const historyDiv = document.getElementById("history");
+  historyDiv.innerHTML = '';
+  if(winnerLog.length === 0){
+    historyDiv.innerText = '得獎紀錄會顯示在此。';
+    return;
+  }
+  winnerLog.forEach((r, idx)=>{
+    const entry = document.createElement('div');
+    const timeLocal = new Date(r.time).toLocaleString();
+    entry.textContent = `${r.name} — ${r.prize ? r.prize + ' — ' : ''}${timeLocal}`;
+    historyDiv.appendChild(entry);
+  });
+}
+
+function clearHistory(){ winnerLog = []; renderHistory(); }
 
 // 開始抽獎（逐一抽）
 async function startDraw(){
@@ -189,9 +414,7 @@ async function startDraw(){
         intervalTime*=slowDown;
         if(Date.now()-startTime<totalTime){ setTimeout(roll, intervalTime); }
         else{
-          // 取出指定名單（localStorage）
           let specified = JSON.parse(localStorage.getItem("specifiedList")||"[]");
-          // 只保留仍在 names 中的指定者
           specified = specified.filter(x=>names.includes(x));
           let winner;
           if(specified.length>0){
@@ -199,16 +422,16 @@ async function startDraw(){
           } else {
             winner = names[Math.floor(Math.random()*names.length)];
           }
-          // 將中獎者加入 winners、從主名單移除（避免重複中獎）
+          // remove winner from names to avoid duplicate
           names = names.filter(n=>n!==winner);
           document.getElementById("names").value = names.join("\n");
-          // 若命中指定者，將其也從 localStorage 的指定名單移除（視需求保留或移除）
+          // if winner was in stored specified list, remove it (so not always re-picked)
           let stored = JSON.parse(localStorage.getItem("specifiedList")||"[]");
           if(stored.includes(winner)){
             stored = stored.filter(n=>n!==winner);
             localStorage.setItem("specifiedList", JSON.stringify(stored));
           }
-          addHistory(winner);
+          addHistoryRecord(winner);
           updateDisplay(winner, "red");
           resolve();
         }
@@ -216,26 +439,20 @@ async function startDraw(){
       roll();
     });
 
-    // 每抽完一位停 1 秒再抽下一位
     await new Promise(r=>setTimeout(r, 1000));
   }
-
   spinning=false;
 }
 
-// CSV 上傳
-function uploadCSV(){
-  document.getElementById("csvFile").click();
-}
+/* CSV upload and other helpers */
+function uploadCSV(){ document.getElementById("csvFile").click(); }
 document.getElementById("csvFile").addEventListener("change",function(e){
   const file = e.target.files[0];
   if(!file) return;
   const reader = new FileReader();
   reader.onload = function(ev){
-    // 讀 CSV 每行第一欄為名字
     const lines = ev.target.result.split(/\r?\n/).map(l=>l.trim()).filter(l=>l!=="");
     const parsed = lines.map(l => {
-      // 支援有逗號的 CSV 行：取第一欄（若是 CSV 帶引號也可）
       const cols = l.split(",");
       return cols[0].replace(/^"|"$/g,'').trim();
     }).filter(x=>x);
@@ -243,14 +460,8 @@ document.getElementById("csvFile").addEventListener("change",function(e){
   };
   reader.readAsText(file);
 });
-
-// 載入範例
 function loadSample(){ document.getElementById("names").value="張三\n李四\n王五\n小明\n小美"; updateDisplay(""); }
-
-// 清空名單
 function clearList(){ document.getElementById("names").value=""; updateDisplay(""); }
-
-// 生成數字名單
 function generateNumberList(){
   const start=parseInt(document.getElementById("startNumber").value);
   const end=parseInt(document.getElementById("endNumber").value);
@@ -261,58 +472,72 @@ function generateNumberList(){
   updateDisplay("");
 }
 
-// 匯出中獎名單（簡易 CSV）
+// 匯出中獎名單（Name, Prize, Time）
 function exportWinners(){
-  const history = document.getElementById("history");
-  if(history.children.length===0){ alert("沒有中獎紀錄可匯出"); return; }
-  let csvContent = "中獎紀錄\n";
-  Array.from(history.children).forEach(div=>{ csvContent += div.textContent.replace(/\n/g,' ') + "\n"; });
-  const blob = new Blob([csvContent],{type:"text/csv;charset=utf-8"});
+  if(winnerLog.length === 0){ alert("沒有中獎紀錄可匯出"); return; }
+  const rows = [['名字','獎品','時間']];
+  winnerLog.forEach(r=>{
+    rows.push([r.name, r.prize, r.time]);
+  });
+  const csv = rows.map(r=> r.map(c=> `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv],{type:"text/csv;charset=utf-8"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = "winners.csv";
   a.click();
 }
 
-/* ===== 密碼 & Settings Modal ===== */
-function enterPassword(){
-  const pw = prompt("請輸入密碼：");
-  if(pw === "911021"){
-    // 顯示 modal 並載入現有指定名單
+/* ================== Settings modal + specified list ================== */
+
+function handleOther(){
+  if(currentUserIsPremium()){
     openSettingsModal();
   } else {
-    alert("密碼錯誤！");
+    if(!getCurrentUser()){
+      if(confirm("此功能為付費功能，需先登入並升級為付費。是否要登入或註冊？")){
+        openLoginModal();
+      }
+    } else {
+      if(confirm("您的帳號尚未付費或已過期。是否要升級為付費？")){
+        openUpgradeModal();
+      }
+    }
   }
 }
-
 function openSettingsModal(){
-  const modal = document.getElementById("settingsModal");
-  const textarea = document.getElementById("specifiedList");
-  const stored = JSON.parse(localStorage.getItem("specifiedList")||"[]");
-  textarea.value = stored.join("\n");
-  modal.style.display = "flex";
-  // focus
-  setTimeout(()=> textarea.focus(), 100);
+  const modal=document.getElementById("settingsModal");
+  const textarea=document.getElementById("specifiedList");
+  const stored=JSON.parse(localStorage.getItem("specifiedList")||"[]");
+  textarea.value=stored.join("\n");
+  modal.style.display='flex';
+  setTimeout(()=>textarea.focus(),100);
 }
+function closeSettingsModal(){ document.getElementById("settingsModal").style.display='none'; }
+function saveSpecifiedList(){ const textarea=document.getElementById("specifiedList"); const list=textarea.value.split(/\r?\n/).map(s=>s.trim()).filter(s=>s); localStorage.setItem("specifiedList", JSON.stringify(list)); alert('已儲存指定名單（本機）'); closeSettingsModal(); }
 
-function closeSettingsModal(){
-  const modal = document.getElementById("settingsModal");
-  modal.style.display = "none";
-}
+/* ================== Login/Register modal controls ================== */
+function openLoginModal(){ document.getElementById('loginModal').style.display='flex'; }
+function closeLoginModal(){ document.getElementById('loginModal').style.display='none'; }
+function openRegisterModal(){ document.getElementById('registerModal').style.display='flex'; }
+function closeRegisterModal(){ document.getElementById('registerModal').style.display='none'; }
+function openUpgradeModal(){ document.getElementById('upgradeModal').style.display='flex'; }
+function closeUpgradeModal(){ document.getElementById('upgradeModal').style.display='none'; }
 
-function saveSpecifiedList(){
-  const textarea = document.getElementById("specifiedList");
-  const list = textarea.value.split(/\r?\n/).map(s=>s.trim()).filter(s=>s);
-  localStorage.setItem("specifiedList", JSON.stringify(list));
-  alert("已儲存指定名單（localStorage）");
-  closeSettingsModal();
-}
-
-/* 初始化：若 localStorage 有指定名單可載入（非必要） */
+/* Initialization */
 (function init(){
-  // 如果之前沒有抽獎，保持尚未抽獎提示
+  renderUserStatus();
   updateDisplay("");
+  renderHistory();
+  // close modal on backdrop click
+  document.querySelectorAll('.modal-backdrop').forEach(m=>{
+    m.addEventListener('click', (e)=>{ if(e.target===m) m.style.display='none'; });
+  });
 })();
+
+// ensure renderUserStatus runs after auth changes
+const _origLogout = logout;
+logout = function(){ _origLogout(); renderUserStatus(); };
+
 </script>
 
 </body>
