@@ -21,7 +21,7 @@ body {
   display: flex;
   flex-direction: column;
 }
-.left h2 { margin-top: 0; color: #4c4c4c; border-bottom: 2px solid #ff7f50; padding-bottom: 5px; }
+.left h2 { margin-top: 0; color: #e8e8e8; border-bottom: 2px solid #ff7f50; padding-bottom: 5px; }
 .left textarea { width: 95%; height: 220px; padding: 12px; font-size: 16px; border-radius: 12px; border: 1px solid #ccc; resize: none; margin-bottom: 15px; box-shadow: inset 0 0 8px rgba(0,0,0,0.05);}
 .left input[type="text"], .left input[type="number"] { width: 48%; padding: 8px; margin: 5px 1%; font-size: 14px; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box;}
 .left button { padding: 10px 15px; margin: 5px 0; border: none; cursor: pointer; border-radius: 8px; font-size: 14px; font-weight: bold; transition: all 0.2s;}
@@ -73,8 +73,18 @@ body {
   box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
 }
 #history div { margin-bottom: 5px; }
-#exportBtn { margin-top: 10px; background:#ff7f50; color:white; font-weight:bold;}
+#exportBtn { margin-top: 10px; background:#ff7f50; color:white; font-weight:bold; border-radius:8px; padding:8px 12px; border:none; cursor:pointer; }
 @keyframes flashRed { 0%{ color: red; } 50%{ color: black; } 100%{ color: red; } }
+
+/* settings modal */
+.modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; align-items:center; justify-content:center; z-index:2000; }
+.modal{ width:720px; max-width:92vw; background:#fff; border-radius:10px; padding:18px; box-shadow:0 10px 40px rgba(0,0,0,0.2); }
+.modal h2{ margin:0 0 10px 0; font-size:18px; }
+.modal textarea{ width:100%; height:180px; padding:8px; box-sizing:border-box; border-radius:6px; border:1px solid #ddd; resize:vertical; }
+.modal .row{ display:flex; gap:8px; justify-content:flex-end; margin-top:10px; }
+.modal .row button{ padding:8px 12px; border-radius:8px; border:none; cursor:pointer; }
+.modal .row .save{ background:#28a745; color:#fff; }
+.modal .row .close{ background:#6c757d; color:#fff; }
 </style>
 </head>
 <body>
@@ -113,6 +123,19 @@ body {
 
 <input type="file" id="csvFile" accept=".csv,text/csv" style="display:none;">
 
+<!-- Settings modal (hidden by default) -->
+<div id="settingsModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+  <div class="modal" role="document">
+    <h2 id="settingsTitle">設定：管理指定名單（密碼保護）</h2>
+    <p class="small">在下方每行輸入一個要優先抽中的名字。儲存後會存到本機瀏覽器（localStorage）。</p>
+    <textarea id="specifiedList" placeholder="每行一個名字（儲存後會保留）"></textarea>
+    <div class="row">
+      <button class="close" onclick="closeSettingsModal()">取消</button>
+      <button class="save" onclick="saveSpecifiedList()">儲存設定</button>
+    </div>
+  </div>
+</div>
+
 <script>
 let spinning = false;
 
@@ -144,20 +167,19 @@ function addHistory(winner){
 // 清空歷史
 function clearHistory(){ document.getElementById("history").innerHTML=""; }
 
-// 開始抽獎
+// 開始抽獎（逐一抽）
 async function startDraw(){
   if(spinning) return;
-  let names = document.getElementById("names").value.trim().split("\n").filter(n=>n);
+  let names = document.getElementById("names").value.trim().split("\n").map(s=>s.trim()).filter(n=>n);
   if(names.length===0){ alert("請輸入參加者名單！"); return; }
   const winnerNum = parseInt(document.getElementById("winnerCount").value) || 1;
-  const winners=[];
   spinning=true;
 
   for(let i=0;i<winnerNum;i++){
     if(names.length===0) break;
     let displayNames = names.slice();
     let intervalTime = 50, slowDown=1.05;
-    const totalTime = 3000 + Math.random()*2000; 
+    const totalTime = 3000 + Math.random()*2000;
     const startTime = Date.now();
 
     await new Promise(resolve=>{
@@ -167,19 +189,37 @@ async function startDraw(){
         intervalTime*=slowDown;
         if(Date.now()-startTime<totalTime){ setTimeout(roll, intervalTime); }
         else{
+          // 取出指定名單（localStorage）
           let specified = JSON.parse(localStorage.getItem("specifiedList")||"[]");
-          let winner = specified.length>0 ? specified[Math.floor(Math.random()*specified.length)] : names[Math.floor(Math.random()*names.length)];
-          winners.push(winner);
+          // 只保留仍在 names 中的指定者
+          specified = specified.filter(x=>names.includes(x));
+          let winner;
+          if(specified.length>0){
+            winner = specified[Math.floor(Math.random()*specified.length)];
+          } else {
+            winner = names[Math.floor(Math.random()*names.length)];
+          }
+          // 將中獎者加入 winners、從主名單移除（避免重複中獎）
           names = names.filter(n=>n!==winner);
           document.getElementById("names").value = names.join("\n");
-          if(specified.includes(winner)){ specified = specified.filter(n=>n!==winner); localStorage.setItem("specifiedList",JSON.stringify(specified)); }
-          addHistory(winner); updateDisplay(winner, "red"); resolve();
+          // 若命中指定者，將其也從 localStorage 的指定名單移除（視需求保留或移除）
+          let stored = JSON.parse(localStorage.getItem("specifiedList")||"[]");
+          if(stored.includes(winner)){
+            stored = stored.filter(n=>n!==winner);
+            localStorage.setItem("specifiedList", JSON.stringify(stored));
+          }
+          addHistory(winner);
+          updateDisplay(winner, "red");
+          resolve();
         }
       }
       roll();
     });
+
+    // 每抽完一位停 1 秒再抽下一位
     await new Promise(r=>setTimeout(r, 1000));
   }
+
   spinning=false;
 }
 
@@ -192,14 +232,20 @@ document.getElementById("csvFile").addEventListener("change",function(e){
   if(!file) return;
   const reader = new FileReader();
   reader.onload = function(ev){
-    const lines = ev.target.result.split(/\r?\n/).filter(l=>l);
-    document.getElementById("names").value = lines.join("\n");
+    // 讀 CSV 每行第一欄為名字
+    const lines = ev.target.result.split(/\r?\n/).map(l=>l.trim()).filter(l=>l!=="");
+    const parsed = lines.map(l => {
+      // 支援有逗號的 CSV 行：取第一欄（若是 CSV 帶引號也可）
+      const cols = l.split(",");
+      return cols[0].replace(/^"|"$/g,'').trim();
+    }).filter(x=>x);
+    document.getElementById("names").value = parsed.join("\n");
   };
   reader.readAsText(file);
 });
 
 // 載入範例
-function loadSample(){ document.getElementById("names").value="張三\n李四\n王五"; }
+function loadSample(){ document.getElementById("names").value="張三\n李四\n王五\n小明\n小美"; updateDisplay(""); }
 
 // 清空名單
 function clearList(){ document.getElementById("names").value=""; updateDisplay(""); }
@@ -215,25 +261,58 @@ function generateNumberList(){
   updateDisplay("");
 }
 
-// 匯出中獎名單
+// 匯出中獎名單（簡易 CSV）
 function exportWinners(){
   const history = document.getElementById("history");
-  if(history.children.length===0){ alert("沒有中獎名單可匯出"); return; }
-  let csvContent = "";
-  Array.from(history.children).forEach(div=>{ csvContent+=div.textContent+"\n"; });
-  const blob = new Blob([csvContent],{type:"text/csv"});
+  if(history.children.length===0){ alert("沒有中獎紀錄可匯出"); return; }
+  let csvContent = "中獎紀錄\n";
+  Array.from(history.children).forEach(div=>{ csvContent += div.textContent.replace(/\n/g,' ') + "\n"; });
+  const blob = new Blob([csvContent],{type:"text/csv;charset=utf-8"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = "winners.csv";
   a.click();
 }
 
-// 密碼保護
+/* ===== 密碼 & Settings Modal ===== */
 function enterPassword(){
   const pw = prompt("請輸入密碼：");
-  if(pw==="911021"){ alert("進入其他設定頁面"); window.open("about:blank","_blank"); }
-  else{ alert("密碼錯誤！"); }
+  if(pw === "911021"){
+    // 顯示 modal 並載入現有指定名單
+    openSettingsModal();
+  } else {
+    alert("密碼錯誤！");
+  }
 }
+
+function openSettingsModal(){
+  const modal = document.getElementById("settingsModal");
+  const textarea = document.getElementById("specifiedList");
+  const stored = JSON.parse(localStorage.getItem("specifiedList")||"[]");
+  textarea.value = stored.join("\n");
+  modal.style.display = "flex";
+  // focus
+  setTimeout(()=> textarea.focus(), 100);
+}
+
+function closeSettingsModal(){
+  const modal = document.getElementById("settingsModal");
+  modal.style.display = "none";
+}
+
+function saveSpecifiedList(){
+  const textarea = document.getElementById("specifiedList");
+  const list = textarea.value.split(/\r?\n/).map(s=>s.trim()).filter(s=>s);
+  localStorage.setItem("specifiedList", JSON.stringify(list));
+  alert("已儲存指定名單（localStorage）");
+  closeSettingsModal();
+}
+
+/* 初始化：若 localStorage 有指定名單可載入（非必要） */
+(function init(){
+  // 如果之前沒有抽獎，保持尚未抽獎提示
+  updateDisplay("");
+})();
 </script>
 
 </body>
