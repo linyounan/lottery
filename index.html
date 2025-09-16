@@ -9,116 +9,117 @@
 
   gtag('config', 'G-65GTWZKRV5');
 </script>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>專業抽獎程式 v4.0</title>
-<style>
-:root{
-  --brand:#ff7f50;
-  --grey:#666;
-  --muted:#888;
-  --bg:#f0f4f8;
-  --winner:#ff6f00;   /* 中獎橘色 */
-  --rolling:#666;     /* 跑動灰色 */
-  --idle:#999;        /* 尚未抽獎灰色 */
-  --idle-font:64px;   /* 尚未抽獎字體大小 */
-  --win-font:200px;   /* 中獎字體大小（跑馬燈） */
-}
-*{box-sizing:border-box}
-body{
-  font-family:"Comic Sans MS","華康手札體","微軟正黑體",sans-serif;
-  margin:0; min-height:100vh; display:flex; background:var(--bg);
-}
-/* 左側 */
-.left{
-  width:40%; min-width:300px; padding:20px; background:#fff;
-  box-shadow:3px 0 10px rgba(0,0,0,.1); display:flex; flex-direction:column;
-}
-.left-header{display:flex; align-items:center; justify-content:space-between; gap:12px}
-.left h2{margin:0; font-size:20px; color:#333; border-bottom:2px solid var(--brand); padding-bottom:8px}
-#userGreeting{font-size:13px; color:#444; margin-left:12px}
-.header-actions{display:flex; gap:8px}
-.header-actions button{padding:6px 10px; font-size:13px; border:none; border-radius:6px; cursor:pointer}
-.btn-primary{background:var(--brand); color:#fff}
-.btn-secondary{background:#666; color:#fff}
-
-.left textarea{
-  width:95%; height:220px; padding:12px; font-size:16px; border-radius:12px;
-  border:1px solid #ccc; resize:none; margin:15px 0; box-shadow:inset 0 0 8px rgba(0,0,0,.05);
-}
-.left input[type="text"], .left input[type="number"]{
-  width:48%; padding:8px; margin:5px 1%; font-size:14px; border-radius:8px; border:1px solid #ccc;
-}
-.left button{padding:10px 15px; margin:5px 0; border:none; cursor:pointer; border-radius:8px; font-weight:700}
-.btn-start{background:linear-gradient(45deg,#ff9a3c,#ff6f00); color:#fff}
-.btn-start:hover{background:linear-gradient(45deg,#ff6f00,#ff9a3c)}
-.btn-gray{background:#9e9e9e; color:#fff}
-.btn-gray:hover{background:#757575}
-.small-note{font-size:12px; color:#666; margin-top:6px}
-
-/* 右側 */
-.right{
-  width:60%; min-width:320px; display:flex; flex-direction:column; align-items:center;
-  background:#fdf6e3; padding:60px 16px 24px;
-}
-
-/* 跑馬燈圓形區（白色外框） */
-#scrollArea{
-  width:420px; height:420px; border:8px solid #fff; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  background:radial-gradient(circle at 30% 30%, #e5e5e5, #bdbdbd);
-  box-shadow: inset -5px -5px 15px rgba(0,0,0,.2),
-              inset  5px  5px 15px rgba(255,255,255,.35),
-              5px 5px 20px rgba(0,0,0,.28);
-  margin-bottom:16px;
-}
-#currentName{
-  display:flex; align-items:center; justify-content:center; text-align:center;
-  color:var(--idle); font-size:var(--idle-font); /* 尚未抽獎小一點 */
-  line-height:1; word-break:break-word; padding:0 12px;
-}
-
-/* 歷史紀錄與匯出 */
-#history{
-  width:420px; max-width:90vw; max-height:220px; overflow:auto; background:#fff; padding:10px;
-  border-radius:10px; border:1px solid #ccc; box-shadow:inset 0 0 5px rgba(0,0,0,.05)
-}
-#history div{margin-bottom:6px; font-size:14px}
-#exportBtn{margin-top:10px; background:var(--brand); color:#fff; border:none; padding:8px 12px; border-radius:8px; cursor:pointer}
-
-/* 中獎閃爍（橘色） */
-@keyframes flashWin{
-  0%{ color:var(--winner) } 50%{ color:#000 } 100%{ color:var(--winner) }
-}
-
-/* Modal 基本 */
-.modal-backdrop{position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; z-index:9999}
-.modal{width:720px; max-width:92vw; background:#fff; border-radius:12px; padding:18px; box-shadow:0 10px 40px rgba(0,0,0,.25)}
-.modal h2{margin:0 0 10px 0; font-size:18px}
-.modal .small{font-size:13px; color:#666; margin-top:6px}
-.modal textarea, .modal input, .modal select{width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; margin-top:8px}
-.modal .row{display:flex; gap:8px; justify-content:flex-end; margin-top:12px}
-.modal .row button{padding:8px 12px; border:none; border-radius:8px; cursor:pointer}
-.modal .save{background:#28a745; color:#fff}
-.modal .close{background:#6c757d; color:#fff}
-
-/* 購買注意事項 */
-.notice-list{background:#fff7ec; border:1px solid #ffd6b3; padding:10px; border-radius:8px; font-size:13px; color:#5a4633}
-.notice-list li{margin:6px 0}
-
-/* RWD 手機版 */
-@media (max-width: 900px){
-  body{flex-direction:column}
-  .left,.right{width:100%}
-  .left{box-shadow:none; padding:16px 14px}
-  #scrollArea{width:min(82vw,420px); height:min(82vw,420px)}
-  #history{width:min(90vw,520px)}
+  <!-- 你可保留自己的 GA 代碼 -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>專業抽獎程式 v5.0 </title>
+  <style>
   :root{
-    --idle-font:48px;   /* 手機尚未抽獎更小 */
-    --win-font:160px;   /* 手機中獎字體略小 */
+    --brand:#ff7f50;
+    --grey:#666;
+    --muted:#888;
+    --bg:#f0f4f8;
+    --winner:#ff6f00;   /* 中獎橘色 */
+    --rolling:#666;     /* 跑動灰色 */
+    --idle:#999;        /* 尚未抽獎灰色 */
+    --idle-font:64px;   /* 尚未抽獎字體大小 */
+    --win-font:200px;   /* 中獎字體大小（跑馬燈） */
   }
-}
-</style>
+  *{box-sizing:border-box}
+  body{
+    font-family:"Comic Sans MS","華康手札體","微軟正黑體",sans-serif;
+    margin:0; min-height:100vh; display:flex; background:var(--bg);
+  }
+  /* 左側 */
+  .left{
+    width:40%; min-width:300px; padding:20px; background:#fff;
+    box-shadow:3px 0 10px rgba(0,0,0,.1); display:flex; flex-direction:column;
+  }
+  .left-header{display:flex; align-items:center; justify-content:space-between; gap:12px}
+  .left h2{margin:0; font-size:20px; color:#333; border-bottom:2px solid var(--brand); padding-bottom:8px}
+  #userGreeting{font-size:13px; color:#444; margin-left:12px}
+  .header-actions{display:flex; gap:8px}
+  .header-actions button{padding:6px 10px; font-size:13px; border:none; border-radius:6px; cursor:pointer}
+  .btn-primary{background:var(--brand); color:#fff}
+  .btn-secondary{background:#666; color:#fff}
+
+  .left textarea{
+    width:95%; height:220px; padding:12px; font-size:16px; border-radius:12px;
+    border:1px solid #ccc; resize:none; margin:15px 0; box-shadow:inset 0 0 8px rgba(0,0,0,.05);
+  }
+  .left input[type="text"], .left input[type="number"], .left input[type="email"], .left input[type="password"]{
+    width:48%; padding:8px; margin:5px 1%; font-size:14px; border-radius:8px; border:1px solid #ccc;
+  }
+  .left button{padding:10px 15px; margin:5px 0; border:none; cursor:pointer; border-radius:8px; font-weight:700}
+  .btn-start{background:linear-gradient(45deg,#ff9a3c,#ff6f00); color:#fff}
+  .btn-start:hover{background:linear-gradient(45deg,#ff6f00,#ff9a3c)}
+  .btn-gray{background:#9e9e9e; color:#fff}
+  .btn-gray:hover{background:#757575}
+  .small-note{font-size:12px; color:#666; margin-top:6px}
+
+  /* 右側 */
+  .right{
+    width:60%; min-width:320px; display:flex; flex-direction:column; align-items:center;
+    background:#fdf6e3; padding:60px 16px 24px;
+  }
+
+  /* 跑馬燈圓形區（白色外框） */
+  #scrollArea{
+    width:420px; height:420px; border:8px solid #fff; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(circle at 30% 30%, #e5e5e5, #bdbdbd);
+    box-shadow: inset -5px -5px 15px rgba(0,0,0,.2),
+                inset  5px  5px 15px rgba(255,255,255,.35),
+                5px 5px 20px rgba(0,0,0,.28);
+    margin-bottom:16px;
+  }
+  #currentName{
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    color:var(--idle); font-size:var(--idle-font);
+    line-height:1; word-break:break-word; padding:0 12px;
+  }
+
+  /* 歷史紀錄與匯出 */
+  #history{
+    width:420px; max-width:90vw; max-height:220px; overflow:auto; background:#fff; padding:10px;
+    border-radius:10px; border:1px solid #ccc; box-shadow:inset 0 0 5px rgba(0,0,0,.05)
+  }
+  #history div{margin-bottom:6px; font-size:14px}
+  #exportBtn{margin-top:10px; background:var(--brand); color:#fff; border:none; padding:8px 12px; border-radius:8px; cursor:pointer}
+
+  /* 中獎閃爍（橘色） */
+  @keyframes flashWin{
+    0%{ color:var(--winner) } 50%{ color:#000 } 100%{ color:var(--winner) }
+  }
+
+  /* Modal 基本 */
+  .modal-backdrop{position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; z-index:9999}
+  .modal{width:720px; max-width:92vw; background:#fff; border-radius:12px; padding:18px; box-shadow:0 10px 40px rgba(0,0,0,.25)}
+  .modal h2{margin:0 0 10px 0; font-size:18px}
+  .modal .small{font-size:13px; color:#666; margin-top:6px}
+  .modal textarea, .modal input, .modal select{width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; margin-top:8px}
+  .modal .row{display:flex; gap:8px; justify-content:flex-end; margin-top:12px}
+  .modal .row button{padding:8px 12px; border:none; border-radius:8px; cursor:pointer}
+  .modal .save{background:#28a745; color:#fff}
+  .modal .close{background:#6c757d; color:#fff}
+
+  /* 購買注意事項 */
+  .notice-list{background:#fff7ec; border:1px solid #ffd6b3; padding:10px; border-radius:8px; font-size:13px; color:#5a4633}
+  .notice-list li{margin:6px 0}
+
+  /* RWD 手機版 */
+  @media (max-width: 900px){
+    body{flex-direction:column}
+    .left,.right{width:100%}
+    .left{box-shadow:none; padding:16px 14px}
+    #scrollArea{width:min(82vw,420px); height:min(82vw,420px)}
+    #history{width:min(90vw,520px)}
+    :root{
+      --idle-font:48px;
+      --win-font:160px;
+    }
+  }
+  </style>
 </head>
 <body>
 
@@ -130,11 +131,11 @@ body{
       <div id="userGreeting">尚未登入</div>
     </div>
     <div class="header-actions">
-      <button id="loginBtnInline" class="btn-secondary" onclick="openLoginModal()">登入</button>
-      <button id="registerBtnInline" class="btn-secondary" onclick="openRegisterModal()">註冊</button>
-      <button id="logoutBtnInline" class="btn-secondary" style="display:none" onclick="logout()">登出</button>
-      <button id="purchaseBtn" class="btn-primary" style="display:none" onclick="openPurchaseModal()">購買方案</button>
-      <button id="noticeBtn" class="btn-secondary" style="display:none" onclick="openNoticeModal()">購買注意事項</button>
+      <button id="loginBtnInline" class="btn-secondary">登入</button>
+      <button id="registerBtnInline" class="btn-secondary">註冊</button>
+      <button id="logoutBtnInline" class="btn-secondary" style="display:none">登出</button>
+      <button id="purchaseBtn" class="btn-primary" style="display:none">購買方案</button>
+      <button id="noticeBtn" class="btn-secondary" style="display:none">購買注意事項</button>
     </div>
   </div>
 
@@ -145,23 +146,23 @@ body{
   <div>
     起始：<input type="number" id="startNumber" value="1" />
     結束：<input type="number" id="endNumber" value="100" />
-    <button class="btn-gray" onclick="generateNumberList()">生成號碼名單</button>
+    <button class="btn-gray" id="genNumberBtn">生成號碼名單</button>
   </div>
 
   <p style="margin:10px 0 0">抽幾個中獎者：</p>
   <input type="number" id="winnerCount" value="1" min="1" style="width:100%; margin-bottom:10px;" />
 
-  <button class="btn-start" onclick="startDraw()">開始抽獎</button>
+  <button class="btn-start" id="startBtn">開始抽獎</button>
 
   <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;">
-    <button class="btn-gray" onclick="uploadCSV()">上傳 CSV</button>
-    <button class="btn-gray" onclick="loadSample()">載入範例</button>
-    <button class="btn-gray" onclick="clearList()">清空名單</button>
-    <button class="btn-gray" onclick="clearHistory()">清除歷史紀錄</button>
-    <button class="btn-gray" onclick="handleOther()">其他</button>
+    <button class="btn-gray" id="uploadCSVBtn">上傳 CSV</button>
+    <button class="btn-gray" id="loadSampleBtn">載入範例</button>
+    <button class="btn-gray" id="clearListBtn">清空名單</button>
+    <button class="btn-gray" id="clearHistoryBtn">清除歷史紀錄</button>
+    <button class="btn-gray" id="otherBtn">其他</button>
   </div>
 
-  <div class="small-note">※ 「其他」為會員功能。</div>
+  <div class="small-note">※ 「其他」為會員功能（且需密碼）。</div>
 </div>
 
 <!-- 右欄 -->
@@ -170,7 +171,7 @@ body{
     <div id="currentName">尚未抽獎</div>
   </div>
   <div id="history">得獎紀錄會顯示在此。</div>
-  <button id="exportBtn" onclick="exportWinners()">匯出中獎名單</button>
+  <button id="exportBtn">匯出中獎名單</button>
 </div>
 
 <!-- 隱藏檔案 input -->
@@ -183,8 +184,8 @@ body{
     <div class="small">每行輸入一個要優先抽中的名字（需同主名單）。會儲存在本機瀏覽器。</div>
     <textarea id="specifiedList" placeholder="每行一個名字"></textarea>
     <div class="row">
-      <button class="close" onclick="closeSettingsModal()">取消</button>
-      <button class="save" onclick="saveSpecifiedList()">儲存設定</button>
+      <button class="close" id="closeSettingsBtn">取消</button>
+      <button class="save" id="saveSpecifiedBtn">儲存設定</button>
     </div>
   </div>
 </div>
@@ -195,14 +196,14 @@ body{
     <h2>購買方案</h2>
     <div class="small">請選擇方案並輸入序號啟用會員（序號不會顯示在頁面上）：</div>
     <select id="purchasePlan">
-      <option value="month">月繳 NT$100</option>
-      <option value="quarter">季繳 NT$250</option>
-      <option value="year">年繳 NT$800</option>
+      <option value="month">月繳 NT$100（30天）</option>
+      <option value="quarter">季繳 NT$250（90天）</option>
+      <option value="year">年繳 NT$800（365天）</option>
     </select>
-    <input id="serialInput" placeholder="輸入序號" />
+    <input id="serialInput" placeholder="輸入序號（一次性，跨裝置同步）" />
     <div class="row">
-      <button class="close" onclick="closePurchaseModal()">取消</button>
-      <button class="save" onclick="applySerial()">升級會員</button>
+      <button class="close" id="closePurchaseBtn">取消</button>
+      <button class="save" id="applySerialBtn">升級會員</button>
     </div>
   </div>
 </div>
@@ -212,13 +213,13 @@ body{
   <div class="modal">
     <h2>購買注意事項</h2>
     <ul class="notice-list">
-      <li>帳號資料與權限僅存於你的瀏覽器 <strong>localStorage</strong>，清除瀏覽資料會一併刪除。</li>
-      <li>序號一經使用即視為啟用，僅綁定於目前瀏覽器裝置，不支援跨裝置同步。</li>
-      <li>會員期限以啟用當下即刻起算，方案到期後需重新啟用序號。</li>
-      <li>請勿公開分享序號，避免被他人盜用。</li>
+      <li>帳號、會員到期、序號使用狀態儲存在 <strong>Firebase Firestore</strong>（可跨裝置同步）。</li>
+      <li>序號<strong>僅能使用一次</strong>；使用後會綁定帳號並記錄時間。</li>
+      <li>會員期限從啟用當下起算，到期後可再次使用新序號延長。</li>
+      <li>請妥善保管序號，避免被他人啟用。</li>
     </ul>
     <div class="row">
-      <button class="close" onclick="closeNoticeModal()">關閉</button>
+      <button class="close" id="closeNoticeBtn">關閉</button>
     </div>
   </div>
 </div>
@@ -227,12 +228,12 @@ body{
 <div id="loginModal" class="modal-backdrop" aria-modal="true" role="dialog">
   <div class="modal">
     <h2>登入</h2>
-    <div class="small">請輸入帳號與密碼。</div>
-    <input id="loginUser" placeholder="帳號（username）" />
+    <div class="small">請輸入 Email 與密碼。</div>
+    <input id="loginEmail" type="email" placeholder="Email" />
     <input id="loginPass" type="password" placeholder="密碼" />
     <div class="row">
-      <button class="close" onclick="closeLoginModal()">取消</button>
-      <button class="save" onclick="login()">登入</button>
+      <button class="close" id="closeLoginBtn">取消</button>
+      <button class="save" id="doLoginBtn">登入</button>
     </div>
   </div>
 </div>
@@ -241,175 +242,274 @@ body{
 <div id="registerModal" class="modal-backdrop" aria-modal="true" role="dialog">
   <div class="modal">
     <h2>註冊帳號</h2>
-    <div class="small">註冊完成將自動登入，屆時可購買方案與序號啟用。</div>
-    <input id="registerUser" placeholder="帳號（username）" />
-    <input id="registerPass" type="password" placeholder="密碼" />
+    <div class="small">註冊完成將自動登入，可購買方案與序號啟用（跨裝置同步）。</div>
+    <input id="registerEmail" type="email" placeholder="Email" />
+    <input id="registerPass" type="password" placeholder="密碼（至少6字）" />
     <div class="row">
-      <button class="close" onclick="closeRegisterModal()">取消</button>
-      <button class="save" onclick="register()">註冊</button>
+      <button class="close" id="closeRegisterBtn">取消</button>
+      <button class="save" id="doRegisterBtn">註冊</button>
     </div>
   </div>
 </div>
 
-<script>
+<!-- Firebase + App 腳本（使用 ESM 模組） -->
+<script type="module">
 /* ========= 可調整參數 ========= */
-/* 想新增「其他」密碼：直接在陣列加一條字串即可（不會顯示在畫面）。 */
-const OTHER_PASSWORDS = ['911021']; // 可多組，例如: ['911021','abc123','BB-8888']
-
-/* 想新增方案序號：在這裡對應方案加字串即可（不會顯示在畫面）。 */
-const SERIALS = {
-  month:   ['30ian'],   // 月繳 NT$100
-  quarter: ['90ian'],   // 季繳 NT$250
-  year:    ['365ian']   // 年繳 NT$800
-};
+const OTHER_PASSWORDS = ['911021']; // 多組都可放進來
 /* ========= /可調整參數 ========= */
 
-function dDays(ms){ return Math.ceil(ms/86400000); } // ms → 剩餘天數
+/* ===== Firebase 模組載入 ===== */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+import { 
+  getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut 
+} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
-// ===== Auth / Membership in localStorage =====
-async function sha256Hex(str){
-  if(window.crypto && crypto.subtle){
-    const enc = new TextEncoder();
-    const buf = await crypto.subtle.digest('SHA-256', enc.encode(str));
-    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-  } else { return 'plain:' + str; }
-}
-function loadUsers(){ try{return JSON.parse(localStorage.getItem('users')||'[]')}catch(e){return[]} }
-function saveUsers(arr){ localStorage.setItem('users', JSON.stringify(arr)) }
-function getCurrentUser(){ return localStorage.getItem('currentUser')||null }
-function setCurrentUser(u){ if(u) localStorage.setItem('currentUser',u); else localStorage.removeItem('currentUser') }
+/* ===== 1) 這裡換成你的 Firebase 專案參數 ===== */
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+/* ===== /Firebase Config ===== */
 
-function currentUserObj(){
-  const u = getCurrentUser(); if(!u) return null;
-  const users = loadUsers(); return users.find(x=>x.username===u) || null;
-}
-function isMember(){
-  const me = currentUserObj(); if(!me) return false;
-  return !!me.memberUntil && Date.now() < me.memberUntil;
-}
-function memberRemainDays(){
-  const me = currentUserObj(); if(!me || !me.memberUntil) return 0;
-  const remain = me.memberUntil - Date.now(); return remain>0 ? dDays(remain) : 0;
-}
-function renderUserStatus(){
-  const greet = document.getElementById('userGreeting');
-  const loginBtn = document.getElementById('loginBtnInline');
-  const regBtn = document.getElementById('registerBtnInline');
-  const logoutBtn = document.getElementById('logoutBtnInline');
-  const purchaseBtn = document.getElementById('purchaseBtn');
-  const noticeBtn = document.getElementById('noticeBtn');
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
 
-  const me = currentUserObj();
-  if(!me){
-    greet.textContent = '尚未登入';
-    loginBtn.style.display='inline-block';
-    regBtn.style.display='inline-block';
-    logoutBtn.style.display='none';
+/* ====== UI 元素 ====== */
+const el = (id)=>document.getElementById(id);
+
+// header
+const userGreeting   = el('userGreeting');
+const loginBtnInline = el('loginBtnInline');
+const registerBtnInline = el('registerBtnInline');
+const logoutBtnInline   = el('logoutBtnInline');
+const purchaseBtn    = el('purchaseBtn');
+const noticeBtn      = el('noticeBtn');
+
+// left buttons
+el('genNumberBtn').onclick   = generateNumberList;
+el('startBtn').onclick       = startDraw;
+el('uploadCSVBtn').onclick   = ()=>el('csvFile').click();
+el('loadSampleBtn').onclick  = loadSample;
+el('clearListBtn').onclick   = clearList;
+el('clearHistoryBtn').onclick= clearHistory;
+el('exportBtn').onclick      = exportWinners;
+el('otherBtn').onclick       = handleOther;
+
+// file input
+el('csvFile').addEventListener('change', handleCSV);
+
+// modals open/close
+loginBtnInline.onclick    = ()=>openModal('loginModal');
+registerBtnInline.onclick = ()=>openModal('registerModal');
+logoutBtnInline.onclick   = logout;
+purchaseBtn.onclick       = ()=>openModal('purchaseModal');
+noticeBtn.onclick         = ()=>openModal('noticeModal');
+
+el('closeLoginBtn').onclick    = ()=>closeModal('loginModal');
+el('closeRegisterBtn').onclick = ()=>closeModal('registerModal');
+el('closePurchaseBtn').onclick = ()=>closeModal('purchaseModal');
+el('closeNoticeBtn').onclick   = ()=>closeModal('noticeModal');
+
+el('doLoginBtn').onclick    = doLogin;
+el('doRegisterBtn').onclick = doRegister;
+
+el('closeSettingsBtn').onclick = ()=>closeModal('settingsModal');
+el('saveSpecifiedBtn').onclick = saveSpecifiedList;
+
+el('applySerialBtn').onclick   = applySerial;
+
+/* ======= Modal helpers ======= */
+function openModal(id){ el(id).style.display='flex'; }
+function closeModal(id){ el(id).style.display='none'; }
+// 點 backdrop 關閉
+document.querySelectorAll('.modal-backdrop').forEach(m=>{
+  m.addEventListener('click', e=>{ if(e.target===m) m.style.display='none'; });
+});
+
+/* ======= Auth 狀態 ======= */
+onAuthStateChanged(auth, async (user)=>{
+  if(user){
+    // 確保有對應的 user doc
+    const uref = doc(db, 'users', user.uid);
+    const snap = await getDoc(uref);
+    if(!snap.exists()){
+      await setDoc(uref, {
+        email: user.email || '',
+        memberUntil: 0,
+        createdAt: serverTimestamp()
+      });
+    }
+    renderUserStatus(user);
+  } else {
+    renderUserStatus(null);
+  }
+});
+
+function dDays(ms){ return Math.ceil(ms/86400000); }
+
+async function renderUserStatus(user){
+  if(!user){
+    userGreeting.textContent = '尚未登入';
+    loginBtnInline.style.display='inline-block';
+    registerBtnInline.style.display='inline-block';
+    logoutBtnInline.style.display='none';
     purchaseBtn.style.display='none';
     noticeBtn.style.display='none';
-  }else{
-    const remain = memberRemainDays();
-    greet.textContent = `Hi ${me.username} ${isMember() ? `（會員｜剩餘 ${remain} 天）` : '（非會員）'}`;
-    loginBtn.style.display='none';
-    regBtn.style.display='none';
-    logoutBtn.style.display='inline-block';
-    purchaseBtn.style.display = isMember() ? 'none' : 'inline-block';
-    noticeBtn.style.display='inline-block';
+    return;
+  }
+  // 讀會員到期
+  const uref = doc(db,'users',user.uid);
+  const snap = await getDoc(uref);
+  let until = 0;
+  if(snap.exists()){
+    const data = snap.data();
+    until = data.memberUntil || 0;
+  }
+  const remain = until>Date.now() ? dDays(until - Date.now()) : 0;
+  const isMember = remain>0;
+
+  userGreeting.textContent = `Hi ${user.email} ${isMember ? `（會員｜剩餘 ${remain} 天）` : '（非會員）'}`;
+  loginBtnInline.style.display='none';
+  registerBtnInline.style.display='none';
+  logoutBtnInline.style.display='inline-block';
+  purchaseBtn.style.display = isMember ? 'none':'inline-block';
+  noticeBtn.style.display='inline-block';
+}
+
+/* ======= Login / Register / Logout ======= */
+async function doLogin(){
+  const email = el('loginEmail').value.trim();
+  const pass  = el('loginPass').value;
+  if(!email || !pass){ alert('請輸入 Email 與密碼'); return; }
+  try{
+    await signInWithEmailAndPassword(auth, email, pass);
+    closeModal('loginModal');
+    alert('登入成功');
+  }catch(err){
+    alert('登入失敗：' + err.message);
   }
 }
-async function register(){
-  const u = document.getElementById('registerUser').value.trim();
-  const p = document.getElementById('registerPass').value;
-  if(!u || !p){ alert('請輸入帳號與密碼'); return; }
-  const users = loadUsers();
-  if(users.find(x=>x.username===u)){ alert('此帳號已存在'); return; }
-  const hash = await sha256Hex(p);
-  users.push({ username:u, passwordHash:hash, memberUntil:0 });
-  saveUsers(users); setCurrentUser(u); closeRegisterModal(); renderUserStatus(); alert('註冊成功並已登入');
+async function doRegister(){
+  const email = el('registerEmail').value.trim();
+  const pass  = el('registerPass').value;
+  if(!email || !pass){ alert('請輸入 Email 與密碼'); return; }
+  try{
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    // 建立 Firestore user doc（onAuthStateChanged 也會再保險建一次）
+    await setDoc(doc(db,'users',cred.user.uid), {
+      email,
+      memberUntil: 0,
+      createdAt: serverTimestamp()
+    });
+    closeModal('registerModal');
+    alert('註冊成功並已登入');
+  }catch(err){
+    alert('註冊失敗：' + err.message);
+  }
 }
-async function login(){
-  const u = document.getElementById('loginUser').value.trim();
-  const p = document.getElementById('loginPass').value;
-  if(!u || !p){ alert('請輸入帳號與密碼'); return; }
-  const users = loadUsers();
-  const me = users.find(x=>x.username===u);
-  if(!me){ alert('找不到此帳號'); return; }
-  const hash = await sha256Hex(p);
-  if(hash !== me.passwordHash){ alert('密碼錯誤'); return; }
-  setCurrentUser(u); closeLoginModal(); renderUserStatus(); alert('登入成功');
+async function logout(){
+  await signOut(auth);
+  alert('已登出');
 }
-function logout(){ setCurrentUser(null); renderUserStatus(); alert('已登出'); }
 
-// ===== Purchase / Serial =====
-function openPurchaseModal(){ if(!getCurrentUser()){ openLoginModal(); return; } document.getElementById('purchaseModal').style.display='flex'; }
-function closePurchaseModal(){ document.getElementById('purchaseModal').style.display='none'; }
-function openNoticeModal(){ document.getElementById('noticeModal').style.display='flex'; }
-function closeNoticeModal(){ document.getElementById('noticeModal').style.display='none'; }
+/* ====== 購買方案：序號一次性啟用（Firestore 同步） ====== */
+/*
+  Firestore 結構：
+  - users/{uid} : { email, memberUntil(number), createdAt }
+  - serials/{code} : { days:number, isUsed:boolean, usedBy?:uid, usedAt?:timestamp }
+  使用方式：在 Firestore 先建立 serials 集合文件，文件ID即為序號字串，例如：
+    serials/30ian   { days:30, isUsed:false }
+    serials/90ian   { days:90, isUsed:false }
+    serials/365ian  { days:365, isUsed:false }
+*/
+async function applySerial(){
+  const user = auth.currentUser;
+  if(!user){ alert('請先登入'); return; }
+  const plan = el('purchasePlan').value; // month/quarter/year（僅作顯示，實際以序號 doc.days 為準）
+  const code = el('serialInput').value.trim();
+  if(!code){ alert('請輸入序號'); return; }
 
-function applySerial(){
-  const plan = document.getElementById('purchasePlan').value;
-  const serial = document.getElementById('serialInput').value.trim();
-  if(!serial){ alert('請輸入序號'); return; }
-  const validList = SERIALS[plan] || [];
-  if(!validList.includes(serial)){ alert('序號無效或方案不符'); return; }
+  const sref = doc(db,'serials', code);
+  const snap = await getDoc(sref);
+  if(!snap.exists()){
+    alert('序號不存在或有誤'); return;
+  }
+  const sdata = snap.data();
+  if(sdata.isUsed){
+    alert('此序號已被使用'); return;
+  }
+  const days = Number(sdata.days||0);
+  if(!days || days<=0){
+    alert('序號天數設定有誤'); return;
+  }
 
-  const users = loadUsers();
-  const me = currentUserObj(); if(!me){ alert('請先登入'); return; }
+  // 讀使用者 memberUntil
+  const uref = doc(db,'users', user.uid);
+  const usnap = await getDoc(uref);
+  let memberUntil = 0;
+  if(usnap.exists()){ memberUntil = Number(usnap.data().memberUntil||0); }
 
   const now = Date.now();
-  let addDays = 0;
-  if(plan==='month') addDays = 30;
-  else if(plan==='quarter') addDays = 90;
-  else if(plan==='year') addDays = 365;
+  const added = days * 86400000;
+  const newUntil = Math.max(memberUntil, now) + added;
 
-  const addedMs = addDays * 86400000;
-  me.memberUntil = Math.max(me.memberUntil || 0, now) + addedMs;
-  // 移除已用序號（可選：若想可重複用就註解掉下面兩行）
-  SERIALS[plan] = validList.filter(s => s !== serial);
+  // 先把序號標記已用
+  await setDoc(sref, {
+    ...sdata,
+    isUsed: true,
+    usedBy: user.uid,
+    usedAt: Date.now()
+  });
 
-  // 寫回 users
-  const idx = users.findIndex(x=>x.username===me.username);
-  if(idx>=0) users[idx] = me;
-  saveUsers(users);
+  // 寫回使用者到期
+  await updateDoc(uref, { memberUntil: newUntil });
 
-  closePurchaseModal();
-  renderUserStatus();
-  alert(`已啟用會員（${addDays}天）。目前剩餘 ${memberRemainDays()} 天。`);
+  closeModal('purchaseModal');
+  alert(`已啟用會員（+${days} 天）。`);
+  renderUserStatus(user);
 }
 
-// ===== Lottery =====
+/* ===== Lottery 邏輯 ===== */
 let spinning = false;
 let winnerLog = [];
 
-function updateDisplay(name, mode){ // mode: 'idle' | 'rolling' | 'win'
-  const el = document.getElementById('currentName');
-  if(mode==='idle' || !name){
-    el.textContent = '尚未抽獎';
-    el.style.color = 'var(--idle)';
-    el.style.fontSize = 'var(--idle-font)';
-    el.style.animation = '';
+function updateDisplay(text, mode){ // mode: 'idle' | 'rolling' | 'win'
+  const elName = el('currentName');
+  if(mode==='idle' || !text){
+    elName.textContent = '尚未抽獎';
+    elName.style.color = 'var(--idle)';
+    elName.style.fontSize = 'var(--idle-font)';
+    elName.style.animation = '';
     return;
   }
-  el.textContent = name;
+  elName.textContent = text;
   if(mode==='rolling'){
-    el.style.color = 'var(--rolling)';
-    el.style.fontSize = 'var(--win-font)';
-    el.style.animation = '';
+    elName.style.color = 'var(--rolling)';
+    elName.style.fontSize = 'var(--win-font)';
+    elName.style.animation = '';
   }else if(mode==='win'){
-    el.style.color = 'var(--winner)';
-    el.style.fontSize = 'var(--win-font)';
-    el.style.animation = 'flashWin .6s 3';
+    elName.style.color = 'var(--winner)';
+    elName.style.fontSize = 'var(--win-font)';
+    elName.style.animation = 'flashWin .6s 3';
   }
 }
 
 function addHistoryRecord(name){
-  const prize = (document.getElementById('prizeInput').value || '').trim();
+  const prize = (el('prizeInput').value || '').trim();
   const now = new Date().toISOString();
   winnerLog.unshift({name,prize,time:now});
   renderHistory();
 }
 function renderHistory(){
-  const box = document.getElementById('history');
+  const box = el('history');
   if(winnerLog.length===0){ box.textContent='得獎紀錄會顯示在此。'; return; }
   box.innerHTML='';
   winnerLog.forEach(r=>{
@@ -422,9 +522,9 @@ function clearHistory(){ winnerLog=[]; renderHistory(); }
 
 async function startDraw(){
   if(spinning) return;
-  let list = document.getElementById('names').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  let list = el('names').value.split('\n').map(s=>s.trim()).filter(Boolean);
   if(list.length===0){ alert('請輸入參加者名單！'); return; }
-  const count = Math.max(1, parseInt(document.getElementById('winnerCount').value)||1);
+  const count = Math.max(1, parseInt(el('winnerCount').value)||1);
   spinning = true;
 
   for(let k=0;k<count;k++){
@@ -452,7 +552,7 @@ async function startDraw(){
 
           // 後處理
           list = list.filter(n=>n!==winner);
-          document.getElementById('names').value = list.join('\n');
+          el('names').value = list.join('\n');
 
           // 若在指定名單中，抽中後移除一次，避免每次都中
           if(specified.includes(winner)){
@@ -473,27 +573,26 @@ async function startDraw(){
   spinning=false;
 }
 
-// CSV & helpers
-function uploadCSV(){ document.getElementById('csvFile').click(); }
-document.getElementById('csvFile').addEventListener('change', e=>{
+/* CSV & helpers */
+function handleCSV(e){
   const f=e.target.files[0]; if(!f) return;
   const rd=new FileReader();
   rd.onload=ev=>{
     const lines = ev.target.result.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
     const parsed = lines.map(l=> l.split(',')[0].replace(/^"|"$/g,'').trim() ).filter(Boolean);
-    document.getElementById('names').value = parsed.join('\n');
+    el('names').value = parsed.join('\n');
   };
   rd.readAsText(f);
   e.target.value='';
-});
-function loadSample(){ document.getElementById('names').value='張三\n李四\n王五\n小明\n小美'; updateDisplay('', 'idle'); }
-function clearList(){ document.getElementById('names').value=''; updateDisplay('', 'idle'); }
+}
+function loadSample(){ el('names').value='張三\n李四\n王五\n小明\n小美'; updateDisplay('', 'idle'); }
+function clearList(){ el('names').value=''; updateDisplay('', 'idle'); }
 function generateNumberList(){
-  const s=parseInt(document.getElementById('startNumber').value);
-  const e=parseInt(document.getElementById('endNumber').value);
+  const s=parseInt(el('startNumber').value);
+  const e=parseInt(el('endNumber').value);
   if(isNaN(s)||isNaN(e)||s>e){ alert('請輸入正確數字範圍'); return; }
   const arr=[]; for(let i=s;i<=e;i++) arr.push(String(i));
-  document.getElementById('names').value=arr.join('\n'); updateDisplay('', 'idle');
+  el('names').value=arr.join('\n'); updateDisplay('', 'idle');
 }
 function exportWinners(){
   if(winnerLog.length===0){ alert('沒有中獎紀錄可匯出'); return; }
@@ -503,49 +602,32 @@ function exportWinners(){
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='winners.csv'; a.click();
 }
 
-// Settings（會員＋密碼）
-function handleOther(){
-  if(!getCurrentUser()){ if(confirm('此功能需登入與會員資格，是否先登入？')) openLoginModal(); return; }
-  if(!isMember()){ if(confirm('此功能需會員資格，是否前往購買方案？')) openPurchaseModal(); return; }
+/* Settings（會員＋密碼） */
+async function handleOther(){
+  const user = auth.currentUser;
+  if(!user){ if(confirm('此功能需登入與會員資格，是否先登入？')) openModal('loginModal'); return; }
+  // 檢查會員
+  const snap = await getDoc(doc(db,'users',user.uid));
+  const until = snap.exists()? Number(snap.data().memberUntil||0) : 0;
+  const isMember = until>Date.now();
+  if(!isMember){ if(confirm('此功能需會員資格，是否前往購買方案？')) openModal('purchaseModal'); return; }
 
   // 會員 OK → 要求密碼（支援多組）
   const pw = prompt('請輸入「其他」功能密碼：');
   if(!pw) return;
   if(!OTHER_PASSWORDS.includes(pw)){ alert('密碼錯誤'); return; }
-  openSettingsModal();
+  openModal('settingsModal');
 }
-function openSettingsModal(){
-  const modal=document.getElementById('settingsModal');
-  const area=document.getElementById('specifiedList');
-  const stored=JSON.parse(localStorage.getItem('specifiedList')||'[]');
-  area.value = stored.join('\n');
-  modal.style.display='flex';
-  setTimeout(()=>area.focus(),60);
-}
-function closeSettingsModal(){ document.getElementById('settingsModal').style.display='none'; }
 function saveSpecifiedList(){
-  const list=document.getElementById('specifiedList').value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+  const list=el('specifiedList').value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
   localStorage.setItem('specifiedList', JSON.stringify(list));
-  alert('已儲存指定名單（本機）'); closeSettingsModal();
+  alert('已儲存指定名單（本機）'); closeModal('settingsModal');
 }
 
-// Modal 開關
-function openLoginModal(){ document.getElementById('loginModal').style.display='flex'; }
-function closeLoginModal(){ document.getElementById('loginModal').style.display='none'; }
-function openRegisterModal(){ document.getElementById('registerModal').style.display='flex'; }
-function closeRegisterModal(){ document.getElementById('registerModal').style.display='none'; }
-
-// 初始化
-(function init(){
-  renderUserStatus();
-  updateDisplay('', 'idle');
-  renderHistory();
-
-  // 點 backdrop 關閉
-  document.querySelectorAll('.modal-backdrop').forEach(m=>{
-    m.addEventListener('click', e=>{ if(e.target===m) m.style.display='none'; });
-  });
-})();
+/* 初始顯示 */
+updateDisplay('', 'idle');
+renderHistory();
 </script>
+
 </body>
 </html>
